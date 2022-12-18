@@ -1,8 +1,8 @@
 import useLocalStorage from './useLocalStorage'
 
 export default function useAuth() {
-	const [auth, setAuth] = useLocalStorage()
-	const authInfo = {
+  const [auth, setAuth] = useLocalStorage()
+  const authInfo = {
 		isAuthenticated: auth,
 		signin(value) {
 			return new Promise((resolve) => {
