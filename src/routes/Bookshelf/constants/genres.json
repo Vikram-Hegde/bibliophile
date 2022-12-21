@@ -1,0 +1,30 @@
+[
+	{
+		"genre": "Adventure",
+		"checked": false
+	},
+	{
+		"genre": "Fantasy",
+		"checked": false
+	},
+	{
+		"genre": "Mystery",
+		"checked": false
+	},
+	{
+		"genre": "Romance",
+		"checked": false
+	},
+	{
+		"genre": "Science Fiction",
+		"checked": false
+	},
+	{
+		"genre": "Self Help",
+		"checked": false
+	},
+	{
+		"genre": "Thriller",
+		"checked": false
+	}
+]

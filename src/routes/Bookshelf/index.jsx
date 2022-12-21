@@ -1,16 +1,35 @@
+import PageWrapper from '../../utils/PageWrapper'
 import { MotionConfig } from 'framer-motion'
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import uuid4 from 'uuid4'
 import booksJson from '../../assets/books.json'
 import Input from '../../components/Input'
-import PageWrapper from '../../utils/PageWrapper'
 import './style.scss'
-
+import genres from './constants/genres.json'
 export default function Bookshelf() {
+	const [checkedState, setCheckedState] = useState(genres)
 	const [books, setBooks] = useState(booksJson)
+	let updatedBooks = [...booksJson]
+	useEffect(() => {
+		updatedBooks = books.filter((book) =>
+			checkedState.some((eachGenre) => {
+				return eachGenre.checked && book.genre.includes(eachGenre.genre)
+			})
+		)
+		setBooks(updatedBooks)
+	}, [checkedState])
+	const handleCheckstate = (position) => {
+		const updatedCheckedState = checkedState.map(
+			({ genre, checked }, index) => {
+				if (index === position) {
+					return { genre, checked: !checked }
+				} else {
+					return { genre, checked }
+				}
+			}
+		)
 	const [anim, setAnim] = useState(false)
-
 	const handleChange = (e) => {
 		const searchQuery = e.target.value || ''
 		const filteredBooks = booksJson.filter((book) =>
@@ -19,10 +38,27 @@ export default function Bookshelf() {
 		setBooks(filteredBooks)
 	}
 
+
+		setCheckedState(updatedCheckedState)
+	}
 	return (
 		<PageWrapper className="bookshelf page">
 			<div className="bookshelf__filter">
 				<h4>Filter By</h4>
+				<div className="bookshelf__filter-section">
+					{checkedState.map((eachGenre, index) => (
+						<div key={uuid4()}>
+							<label htmlFor={eachGenre.genre}>{eachGenre.genre}</label>
+							<input
+								type="checkbox"
+								name="filter"
+								id={eachGenre.genre}
+								checked={eachGenre.checked}
+								onChange={() => handleCheckstate(index)}
+							/>
+						</div>
+					))}
+				</div>
 			</div>
 			<div className="bookshelf__books">
 				<Input
@@ -34,6 +70,15 @@ export default function Bookshelf() {
 				/>
 				<div className="bookshelf__books-section">
 					{books.map((book) => (
+
+						<div className="bookshelf__book" key={uuid4()}>
+							<img src={book.url} alt={book.title} />
+							<div className="bookshelf__book-info">
+								<p style={{ textDecoration: 'line-through' }}>
+									₹{book.price + Math.ceil(Math.random() * 1000)}
+								</p>
+								<h5>₹{book.price}</h5>
+
 						<motion.div
 							key={uuid4()}
 							initial={{ opacity: 0, y: '40px' }}
@@ -47,6 +92,7 @@ export default function Bookshelf() {
 									₹{book.price + 1000}
 								</p>
 								<h3>₹{book.price}</h3>
+
 							</div>
 						</motion.div>
 					))}
